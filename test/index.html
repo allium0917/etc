@@ -24,6 +24,7 @@
   <button id="startBtn">퀴즈 시작</button>
 </div>
 
+
 <!-- ✅ 퀴즈 영역 -->
 <div id="quiz-container" style="display:none; margin-top:20px;">
   <p><strong style="font-size: 50px;">한자:</strong> <span id="character" style="font-size: 100px;"></span></p>
@@ -37,156 +38,19 @@
   <button id="resetBtn" style="display:none;">처음부터 다시 하기</button>
 </div>
 
-<script>
-  let quizData = [];
-  let current = 0;
-  let correct = 0;
-  let incorrectList = [];
+<!-- 결과 요약 영역 -->
+<div id="savedResults" style="margin-top: 32px;">
+  <h2>📊 이전 결과</h2>
+  <ul id="resultList" style="list-style:none; padding:0;"></ul>
+  <button onclick="clearResults()">결과 초기화</button>
+</div>
 
-  const quizContainer = document.getElementById("quiz-container");
-  const characterSpan = document.getElementById("character");
-  const answerInput = document.getElementById("answerInput");
-  const result = document.getElementById("result");
-  const progress = document.getElementById("progress");
-  const retryBtn = document.getElementById("retryBtn");
-  const resetBtn = document.getElementById("resetBtn");
-  const submitBtn = document.getElementById("submitBtn");
-  const daySelection = document.getElementById("daySelection");
-
-  document.getElementById("startBtn").addEventListener("click", async () => {
-    const selectedDays = Array.from(document.querySelectorAll('#dayCheckboxes input[type="checkbox"]:checked'))
-      .map(cb => cb.value);
-
-    if (selectedDays.length === 0) {
-      alert("Day를 하나 이상 선택해주세요.");
-      return;
-    }
-
-    try {
-      quizData = [];
-      for (const day of selectedDays) {
-        const res = await fetch(`data/${day}.json`);
-        const data = await res.json();
-        quizData.push(...data);
-      }
-
-      quizData = shuffle(quizData);
-      startQuiz();
-    } catch (e) {
-      alert("문제 로딩 실패! data 폴더와 JSON 파일이 있는지 확인하세요.");
-    }
-  });
-
-  function startQuiz() {
-    daySelection.style.display = "none"; // ✅ Day 선택 숨기기
-    quizContainer.style.display = "block";
-    current = 0;
-    correct = 0;
-    incorrectList = [];
-    retryBtn.style.display = "none";
-    resetBtn.style.display = "none";
-    result.textContent = "";
-    answerInput.value = "";
-    answerInput.focus();
-    showQuestion();
-  }
-
-  function showQuestion() {
-    if (current >= quizData.length) {
-      result.innerHTML = `✅ 완료!<br/>정답: ${correct} / ${quizData.length} (${((correct / quizData.length) * 100).toFixed(1)}%)`;
-      if (incorrectList.length > 0) {
-        retryBtn.style.display = "inline-block";
-      }
-      resetBtn.style.display = "inline-block"; // ✅ 리셋 버튼 표시
-      progress.textContent = "";
-      characterSpan.textContent = "";
-      answerInput.style.display = "none";
-      submitBtn.style.display = "none";
-      return;
-    }
-
-    const q = quizData[current];
-    characterSpan.textContent = q.character;
-    progress.textContent = `문제 ${current + 1} / ${quizData.length}`;
-    answerInput.value = "";
-    answerInput.style.display = "inline-block";
-    submitBtn.style.display = "inline-block";
-    answerInput.focus();
-    result.textContent = "";
-  }
-
-  function submitAnswer() {
-    const userAnswer = answerInput.value.trim();
-    const correctAnswer = quizData[current].meaning.trim();
-
-    if (userAnswer === "") {
-      result.textContent = "뜻을 입력해주세요.";
-      result.style.color = "orange";
-      return;
-    }
-
-    if (userAnswer === correctAnswer) {
-      correct++;
-      result.textContent = "정답입니다!";
-      result.style.color = "green";
-    } else {
-      incorrectList.push(quizData[current]);
-      result.textContent = `오답입니다. 정답은 "${correctAnswer}" 입니다.`;
-      result.style.color = "red";
-    }
-
-    submitBtn.disabled = true;
-    answerInput.disabled = true;
-
-    setTimeout(() => {
-      current++;
-      submitBtn.disabled = false;
-      answerInput.disabled = false;
-      showQuestion();
-    }, 1000);
-  }
-
-  answerInput.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") {
-      submitAnswer();
-    }
-  });
-
-  submitBtn.addEventListener("click", submitAnswer);
-
-  retryBtn.addEventListener("click", () => {
-    if (incorrectList.length === 0) return;
-    quizData = shuffle([...incorrectList]);
-    current = 0;
-    correct = 0;
-    incorrectList = [];
-    result.textContent = "";
-    retryBtn.style.display = "none";
-    resetBtn.style.display = "none";
-    answerInput.style.display = "inline-block";
-    submitBtn.style.display = "inline-block";
-    showQuestion();
-  });
-
-  resetBtn.addEventListener("click", () => {
-    quizContainer.style.display = "none";
-    daySelection.style.display = "block"; // ✅ 다시 Day 선택 영역 보여주기
-    resetForm();
-  });
-
-  function resetForm() {
-    quizData = [];
-    current = 0;
-    correct = 0;
-    incorrectList = [];
-    document.querySelectorAll('#dayCheckboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
-    result.textContent = "";
-  }
-
-  function shuffle(array) {
-    return array.sort(() => Math.random() - 0.5);
-  }
-</script>
-
+<!-- 상세 결과 보기 -->
+<div id="detailView" style="display:none; margin-top:32px; text-align:left;">
+  <h3>📋 상세 결과</h3>
+  <div id="detailContent"></div>
+  <button onclick="closeDetail()">닫기</button>
+</div>
+<script src="script.js"></script>
 </body>
 </html>

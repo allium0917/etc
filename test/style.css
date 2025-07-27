@@ -65,3 +65,14 @@ input[type="checkbox"] {
   width: 24px;
   height: 24px;
 }
+
+#detailView {
+  display: none;
+  width: 300px;             /* 혹은 600px 등 고정 너비 */
+  margin: 0 auto;      /* 위아래 여백 + 좌우 가운데 정렬 */
+  text-align: left;       /* 텍스트는 왼쪽 정렬 */
+    background-color: #fff;
+    padding: 24px 50px;
+    border-radius: 16px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
