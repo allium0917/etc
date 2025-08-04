@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="style.css"/>
+<title>한자 테스트</title>
+</head>
+<body>
+
+<h1>한자 테스트</h1>
+
+<!-- ✅ Day 선택 영역 -->
+<div id="daySelection">
+<div id="dayCheckboxes">
+  <label><span>Day 1</span><input type="checkbox" value="day1"></label>
+  <label><span>Day 2</span><input type="checkbox" value="day2"></label>
+  <label><span>Day 3</span><input type="checkbox" value="day3"></label>
+  <label><span>Day 4</span><input type="checkbox" value="day4"></label>
+  <label><span>Day 5</span><input type="checkbox" value="day5"></label>
+  <label><span>Day 6</span><input type="checkbox" value="day6"></label>
+</div>
+
+  <button id="startBtn">퀴즈 시작</button>
+</div>
+
+
+<!-- ✅ 퀴즈 영역 -->
+<div id="quiz-container" style="display:none; margin-top:20px;">
+  <p><strong style="font-size: 50px;">한자:</strong> <span id="character" style="font-size: 100px;"></span></p>
+  <input type="text" id="answerInput" placeholder="뜻만 입력" autocomplete="off" />
+  <button id="submitBtn">제출</button>
+
+  <p id="progress"></p>
+  <p id="result"></p>
+
+  <button id="retryBtn" style="display:none;">틀린 문제 다시 풀기</button>
+  <button id="resetBtn" style="display:none;">처음부터 다시 하기</button>
+</div>
+
+<!-- 결과 요약 영역 -->
+<div id="savedResults" style="margin-top: 32px;">
+  <h2>📊 이전 결과</h2>
+  <ul id="resultList" style="list-style:none; padding:0;"></ul>
+  <button onclick="clearResults()">결과 초기화</button>
+</div>
+
+<!-- 상세 결과 보기 -->
+<div id="detailView" style="display:none; margin-top:32px; text-align:left;">
+  <h3>📋 상세 결과</h3>
+  <div id="detailContent"></div>
+  <button onclick="closeDetail()">닫기</button>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
