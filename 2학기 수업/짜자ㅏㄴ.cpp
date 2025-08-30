@@ -1,3 +1,4 @@
+//一番目
 #include <stdio.h>
 #include <string.h>
 
